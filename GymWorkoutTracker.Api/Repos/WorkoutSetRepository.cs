@@ -20,6 +20,13 @@ namespace GymWorkoutTracker.Api.Repos
             return _appDbContext.WorkoutSets.Include(x=>x.Excercise);
         }
 
+        public WorkoutSet GetWorkoutSetById(Guid guid)
+        {
+            return _appDbContext.WorkoutSets
+                .Include(x=>x.Excercise)
+                .FirstOrDefault(x => x.Id == guid);
+        }
+
         public IEnumerable<WorkoutSet> GetWorkoutSetsByExercise(Guid exerciseGuid)
         {
             return _appDbContext.WorkoutSets.Where(x => x.ExcerciseId == exerciseGuid).Include(x => x.Excercise);
@@ -29,13 +36,18 @@ namespace GymWorkoutTracker.Api.Repos
         {
             _appDbContext.WorkoutSets.Add(workoutSet);
             _appDbContext.SaveChanges();
-            return workoutSet;
+
+            var newWorkOutSet = _appDbContext.WorkoutSets
+                .Where(x => x.Id == workoutSet.Id)
+                .Include(x => x.Excercise)
+                .FirstOrDefault();
+            return newWorkOutSet;
         }
 
-        public void RemoveWorkoutSet(Guid workoutSetId)
+        public void RemoveWorkoutSet(WorkoutSet workoutSet)
         {
-            var workoutSet = _appDbContext.WorkoutSets.FirstOrDefault(x => x.Id == workoutSetId);
-            _appDbContext.WorkoutSets.Remove(workoutSet ?? throw new InvalidOperationException("Invalid workout id"));
+
+            _appDbContext.WorkoutSets.Remove(workoutSet);
             _appDbContext.SaveChanges();
         }
 
@@ -49,7 +61,12 @@ namespace GymWorkoutTracker.Api.Repos
             update.Reps = workoutSet.Reps;
             update.Weight = workoutSet.Weight;
             _appDbContext.SaveChanges();
-            return update;
+
+            var retrieve = _appDbContext.WorkoutSets
+                .Include(x=>x.Excercise)
+                .FirstOrDefault(x => x.Id == update.Id);
+            
+            return retrieve;
         }
     }
 }

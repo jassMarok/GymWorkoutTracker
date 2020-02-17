@@ -20,7 +20,7 @@ namespace GymWorkoutTracker.Api.Controllers
         {
             _exerciseRepository = exerciseRepository;
         }
-        // GET: /<controller>/
+
         [HttpGet]
         public IActionResult Index()
         {
@@ -28,17 +28,25 @@ namespace GymWorkoutTracker.Api.Controllers
             return Ok(exercises);
         }
 
+        public IActionResult GetExerciseById(Guid exerciseGuid)
+        {
+            var exercise = _exerciseRepository.GetExerciseByGuid(exerciseGuid);
+            if (exercise == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(exercise);
+        }
+
         public IActionResult AddExercise(Exercise exercise)
         {
-            try
+            if (exercise == null)
             {
-                _exerciseRepository.AddExercise(exercise);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
                 return BadRequest();
             }
+
+            _exerciseRepository.AddExercise(exercise);
 
             return Ok(exercise);
         }

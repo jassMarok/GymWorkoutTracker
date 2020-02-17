@@ -17,6 +17,12 @@ namespace GymWorkoutTracker.Api.Repos
         {
             return _context.Excercises.ToList();
         }
+
+        public Exercise GetExerciseByGuid(Guid guidId)
+        {
+            return _context.Excercises.FirstOrDefault(x => x.Id == guidId);
+        }
+
         public Exercise AddExercise(Exercise exercise)
         {
             if (exercise == null || exercise.Name == String.Empty)

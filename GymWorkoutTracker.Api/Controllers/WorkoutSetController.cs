@@ -29,23 +29,74 @@ namespace GymWorkoutTracker.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetWorkOutSetsById(Guid id)
+        public IActionResult GetWorkoutById(Guid id)
         {
-            var setsByGuid = _workoutSetRepository.GetWorkoutSetsByExercise(id);
-            return Ok(setsByGuid);
+            var set = _workoutSetRepository.GetWorkoutSetById(id);
+            if (set == null)
+            {
+                return NotFound();
+            }
+            return Ok(set);
+        }
+
+        [HttpGet("exercise/{id}")]
+        public IActionResult GetWorkOutSetsByExerciseId(Guid id)
+        {
+            var sets = _workoutSetRepository.GetWorkoutSetsByExercise(id);
+            
+            if (sets == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(sets);
+        }
+
+        [HttpPost]
+        public IActionResult AddNewWorkoutSet(WorkoutSet workoutSet)
+        {
+            if (workoutSet == null)
+            {
+                return BadRequest();
+            }
+            _workoutSetRepository.AddWorkoutSet(workoutSet);
+            return Ok(workoutSet);
         }
 
         [HttpPut]
         public IActionResult UpdateWorkoutSet(WorkoutSet workoutSet)
         {
-            _workoutSetRepository.EditWorkoutSet(workoutSet);
+            if (workoutSet == null || workoutSet.Id == Guid.Empty)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                _workoutSetRepository.EditWorkoutSet(workoutSet);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex);
+                return BadRequest(ex);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
             return Ok(workoutSet);
         }
 
         [HttpDelete("{id}")]
         public IActionResult RemoveWorkoutSet(Guid id)
         {
-            _workoutSetRepository.RemoveWorkoutSet(id);
+            var set = _workoutSetRepository.GetWorkoutSetById(id);
+            if (set == null)
+            {
+                return NotFound();
+            }
+            _workoutSetRepository.RemoveWorkoutSet(set);
             return Ok();
         }
     }

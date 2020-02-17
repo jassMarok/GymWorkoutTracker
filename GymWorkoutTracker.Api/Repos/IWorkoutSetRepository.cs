@@ -9,9 +9,10 @@ namespace GymWorkoutTracker.Api.Repos
     public interface IWorkoutSetRepository
     {
         IEnumerable<WorkoutSet> GetAllSets();
+        WorkoutSet GetWorkoutSetById(Guid guid);
         IEnumerable<WorkoutSet> GetWorkoutSetsByExercise(Guid exerciseGuid);
         WorkoutSet AddWorkoutSet(WorkoutSet workoutSet);
-        void RemoveWorkoutSet(Guid workoutSetId);
+        void RemoveWorkoutSet(WorkoutSet workoutSet);
         WorkoutSet EditWorkoutSet(WorkoutSet workoutSet);
     }
 }
