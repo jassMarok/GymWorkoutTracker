@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GymWorkoutTracker.Api.Models;
+using GymWorkoutTracker.Api.Repos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,7 +29,10 @@ namespace GymWorkoutTracker.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddDbContext<AppDbContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddScoped<IExerciseRepository, ExerciseRepository>();
+            services.AddScoped<IWorkoutSetRepository, WorkoutSetRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
