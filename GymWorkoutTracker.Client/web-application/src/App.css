@@ -14,8 +14,14 @@ body {
     font-size: calc(10px + 2vmin);
     color: white;
 }
-
+ul,
+li {
+    list-style: none;
+}
 h1,
-h2 {
+h2,
+p,
+ul,
+li {
     color: white;
 }
