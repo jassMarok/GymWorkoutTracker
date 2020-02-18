@@ -23,6 +23,8 @@ namespace GymWorkoutTracker.Api
             Configuration = configuration;
         }
 
+        private readonly string AllowAnyOriginPolicy = "_allowAnyOrigin";
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -33,6 +35,12 @@ namespace GymWorkoutTracker.Api
                 options.UseSqlServer(Configuration.GetConnectionString("Default")));
             services.AddScoped<IExerciseRepository, ExerciseRepository>();
             services.AddScoped<IWorkoutSetRepository, WorkoutSetRepository>();
+            services.AddCors(options => options.AddPolicy(AllowAnyOriginPolicy,
+                builder => 
+                    builder.AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                ));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +54,8 @@ namespace GymWorkoutTracker.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(AllowAnyOriginPolicy);
 
             app.UseAuthorization();
 
