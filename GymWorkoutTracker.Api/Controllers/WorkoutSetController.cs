@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GymWorkoutTracker.Api.Models;
 using GymWorkoutTracker.Api.Repos;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -53,12 +54,13 @@ namespace GymWorkoutTracker.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddNewWorkoutSet(WorkoutSet workoutSet)
+        public IActionResult AddNewWorkoutSet([FromBody]WorkoutSet workoutSet)
         {
             if (workoutSet == null)
             {
                 return BadRequest();
             }
+
             _workoutSetRepository.AddWorkoutSet(workoutSet);
             return Ok(workoutSet);
         }
