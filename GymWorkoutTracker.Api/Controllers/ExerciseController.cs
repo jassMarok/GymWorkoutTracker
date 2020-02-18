@@ -28,6 +28,7 @@ namespace GymWorkoutTracker.Api.Controllers
             return Ok(exercises);
         }
 
+        [HttpGet("{exerciseGuid}")]
         public IActionResult GetExerciseById(Guid exerciseGuid)
         {
             var exercise = _exerciseRepository.GetExerciseByGuid(exerciseGuid);
@@ -39,6 +40,7 @@ namespace GymWorkoutTracker.Api.Controllers
             return Ok(exercise);
         }
 
+        [HttpPost]
         public IActionResult AddExercise(Exercise exercise)
         {
             if (exercise == null)

@@ -61,6 +61,11 @@ namespace GymWorkoutTracker.Api.Controllers
                 return BadRequest();
             }
 
+            if (workoutSet.TimeStamp == default(DateTime))
+            {
+                workoutSet.TimeStamp = DateTime.Now;
+            }
+
             _workoutSetRepository.AddWorkoutSet(workoutSet);
             return Ok(workoutSet);
         }

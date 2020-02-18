@@ -13,8 +13,8 @@ namespace GymWorkoutTracker.Api.Models
         public Guid? ExcerciseId { get; set; }
         public Exercise Excercise { get; set; }
         [Required]
-        public float Weight { get; set; }
-        [Required]
+        public float? Weight { get; set; }
+        [Required][Range(1, Int32.MaxValue)]
         public int Reps { get; set; }
         public DateTime TimeStamp { get; set; }
     }
