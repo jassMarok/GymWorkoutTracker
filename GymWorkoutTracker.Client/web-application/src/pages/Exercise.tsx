@@ -14,6 +14,7 @@ const Exercise = () => {
     const [tickCounter, setTickCounter] = useState(0);
     const [exerciseInfo, setExerciseInfo] = useState<null | IExercise>(null);
     const [workouts, setWorkouts] = useState<null | IGroupedWorkout>(null);
+    const [fetchError, setFetchError] = useState(false);
 
     const groupDataByDate = (data: Array<IWorkout>) => {
         var groupedData: IGroupedWorkout = _.groupBy(data, function(workout) {
@@ -60,6 +61,7 @@ const Exercise = () => {
             })
             .catch(error => {
                 console.log(error);
+                setFetchError(true);
             });
 
         return () => {
@@ -80,6 +82,7 @@ const Exercise = () => {
                 })
                 .catch(error => {
                     console.log(error);
+                    setFetchError(true);
                 });
         }
         return () => {
@@ -99,7 +102,19 @@ const Exercise = () => {
         return JSX;
     };
 
-    if (workouts === null) return <></>;
+    if (workouts === null && fetchError === true)
+        return (
+            <>
+                <p>Failed to load data</p>
+            </>
+        );
+
+    if (workouts === null)
+        return (
+            <>
+                <p>Loading...</p>
+            </>
+        );
     return (
         <>
             <Container>

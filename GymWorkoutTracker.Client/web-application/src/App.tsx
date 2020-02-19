@@ -8,7 +8,7 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <Link to="/">Gym Tracker</Link>
+                <Link to="/">Gym Tracker ⌚</Link>
             </header>
             <main className="mt-5">
                 <Routing />

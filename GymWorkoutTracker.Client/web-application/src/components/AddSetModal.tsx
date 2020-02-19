@@ -1,11 +1,14 @@
 import React, { useState, useRef } from "react";
 import _ from "underscore";
 import { Row, Button, Modal, Form } from "react-bootstrap";
+import { useAlert } from "react-alert";
 
 const AddSetModal = (props: any) => {
     const refWeightInput = useRef<HTMLInputElement>(null);
     const refRepsInput = useRef<HTMLInputElement>(null);
     const [formValidation, setFormValidation] = useState(false);
+    const alert = useAlert();
+
     const submitForm = (event: any) => {
         const form = event.currentTarget;
         event.preventDefault();
@@ -34,9 +37,12 @@ const AddSetModal = (props: any) => {
                 return response.json();
             })
             .then(function(data) {
-                console.log(data);
+                alert.success("Added new set");
+                props.onHide();
+            })
+            .catch(error => {
+                alert.error("Failed to add new set");
             });
-        props.onHide();
     };
     return (
         <>
