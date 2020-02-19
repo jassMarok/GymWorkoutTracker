@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import DailyWorkouts from "../components/DailyWorkouts";
 import { IExercise } from "../interfaces/IExercise";
 import { IWorkout, IGroupedWorkout } from "../interfaces/IWorkout";
 import _ from "underscore";
 import moment from "moment";
+import { Container, Row, Col } from "react-bootstrap";
 
 const Exercise = () => {
     const { id } = useParams();
@@ -17,34 +19,6 @@ const Exercise = () => {
                 .format();
         });
         return groupedData;
-    };
-
-    const displayGroupedWorkouts = (data: any) => {
-        let dates = Object.keys(data);
-        let values: any = Object.values(data);
-        let table = [];
-        let parent = [];
-        for (let index = 0; index < dates.length; index++) {
-            const currentDate = dates[index];
-            let children = [];
-            for (let j = 0; j < values[index].length; j++) {
-                const workout = values[index][j];
-                children.push(
-                    <li key={index + j.toString()}>
-                        Reps: {workout.reps} | Weight : {workout.weight} | Time
-                        : {workout.timeStamp}
-                    </li>
-                );
-            }
-            table.push(
-                <ul key={index.toString() + currentDate.toString()}>
-                    <li key={currentDate}>{currentDate}</li>
-                    {children}
-                </ul>
-            );
-        }
-        parent.push(<div key={"jatt"}>{table}</div>);
-        return parent;
     };
 
     useEffect(() => {
@@ -74,11 +48,26 @@ const Exercise = () => {
             //Clean Up
         };
     }, []);
+
+    const displayWorkouts = () => {
+        const JSX = [];
+        for (const date in workouts) {
+            JSX.push(
+                <Col key={date} md={4}>
+                    <DailyWorkouts date={date} workouts={workouts[date]} />
+                </Col>
+            );
+        }
+        return JSX;
+    };
+
     if (workouts === null) return <></>;
     return (
         <>
-            <h1>Exercise : {exerciseInfo?.name} 💪</h1>
-            {displayGroupedWorkouts(workouts)}
+            <Container>
+                <h1>Exercise : {exerciseInfo?.name} 💪</h1>
+                <Row className="py-3">{displayWorkouts()}</Row>
+            </Container>
         </>
     );
 };
