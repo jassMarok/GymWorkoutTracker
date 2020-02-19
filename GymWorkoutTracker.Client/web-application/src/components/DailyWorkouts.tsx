@@ -15,7 +15,7 @@ const DailyWorkouts = ({ date, workouts }: IProps) => {
                 <Card.Header>{moment(date).format("MMM Do YYYY")}</Card.Header>
                 <ListGroup variant="flush">
                     {workouts.map(workout => (
-                        <ListGroup.Item>
+                        <ListGroup.Item key={workout.id}>
                             <Badge variant="primary" className="mx-2">
                                 Reps : {workout.reps}
                             </Badge>

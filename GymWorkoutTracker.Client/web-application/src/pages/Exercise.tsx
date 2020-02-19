@@ -9,6 +9,7 @@ import { Container, Row, Col } from "react-bootstrap";
 
 const Exercise = () => {
     const { id } = useParams();
+    const [tickCounter, setTickCounter] = useState(0);
     const [exerciseInfo, setExerciseInfo] = useState<null | IExercise>(null);
     const [workouts, setWorkouts] = useState<null | IGroupedWorkout>(null);
 
@@ -23,6 +24,13 @@ const Exercise = () => {
 
     useEffect(() => {
         /**
+         * Setup Timer
+         */
+        const timer = setInterval(() => {
+            setTickCounter(prevState => (prevState < 5 ? prevState + 1 : 0));
+        }, 1000);
+
+        /**
          * Get Exercise Info
          */
         fetch(`https://localhost:44384/exercise/${id}`)
@@ -33,21 +41,31 @@ const Exercise = () => {
             .catch(error => {
                 console.log(error);
             });
-        /**
-         * Get Workouts
-         */
-        fetch(`https://localhost:44384/workoutset/exercise/${id}`)
-            .then(res => res.json())
-            .then(data => {
-                setWorkouts(groupDataByDate(data));
-            })
-            .catch(error => {
-                console.log(error);
-            });
+
+        return () => {
+            clearInterval(timer);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (tickCounter === 0) {
+            /**
+             * Get Workouts
+             */
+            fetch(`https://localhost:44384/workoutset/exercise/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    setWorkouts(groupDataByDate(data));
+                    console.log("New Data Fetched");
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
         return () => {
             //Clean Up
         };
-    }, []);
+    }, [tickCounter]);
 
     const displayWorkouts = () => {
         const JSX = [];
